@@ -1,7 +1,11 @@
 require 'sequel'
 
 class Initializer
-  public 
+  PROJECT_ROOT_PATH = ""
+  DATABASE_FILE_PATH = PROJECT_ROOT_PATH + "databases/user_generator.db"
+  DATA_FILES_PATH = PROJECT_ROOT_PATH + "data/"
+
+  attr_reader :db
 
   def initialize
     @db = Sequel.sqlite "#{ DATABASE_FILE_PATH }"
@@ -11,15 +15,7 @@ class Initializer
     }
   end
 
-  def db
-    @db
-  end
-
   private
-
-  PROJECT_ROOT_PATH = ""
-  DATABASE_FILE_PATH = PROJECT_ROOT_PATH + "databases/user_generator.db"
-  DATA_FILES_PATH = PROJECT_ROOT_PATH + "data/"
 
   def file_to_db(filename)
     if filename.include? "cities"

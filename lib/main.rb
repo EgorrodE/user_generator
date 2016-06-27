@@ -1,7 +1,6 @@
 require 'slop'
 
 class Main
-
   def initialize
     init_args(ARGV)
     db = Initializer.new.db

@@ -1,12 +1,11 @@
 require_relative 'generator'
 
 class GeneratorRu < Generator
-
-  protected
-
   LETTERS = "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬББЮ"
   DIGITS = "0123456789"
 
+  protected
+  
   def zip(state_id)
     substitute_x(find_by_id(table_name("zip_codes"), state_id)[:label])
   end

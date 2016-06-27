@@ -1,6 +1,7 @@
 require 'sequel'
 
 class Generator
+  attr_reader :country_full_name
 
   def initialize(db, country, error_chance, country_full_name)
     @db = db
@@ -17,9 +18,6 @@ class Generator
   end
 
   protected
-
-  LETTERS = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
-  DIGITS = "0123456789"
 
   def is_digit
     proc { |a| self.class::DIGITS.include? a}
@@ -44,22 +42,22 @@ class Generator
     k = rand(6)
     case k
     when 0 # swap near digits
-      chars = get_chars_array(line, is_digit)
+      chars = chars_n_indexes_array(line, is_digit)
       swap_near(line,chars)
     when 1 # replase digit with another
-      char = get_chars_array(line, is_digit).sample
+      char = chars_n_indexes_array(line, is_digit).sample
       line[char[0]] = rand(10).to_s
     when 2 # remove letter
-      char = get_chars_array(line, is_letter).sample
+      char = chars_n_indexes_array(line, is_letter).sample
       line[char[0]] = ""
     when 3 # double letter
-      char = get_chars_array(line, is_letter).sample
+      char = chars_n_indexes_array(line, is_letter).sample
       line[char[0]] = "#{ char[1] * 2 }"
     when 4 # swap near letters
-      chars = get_chars_array(line, is_letter)
+      chars = chars_n_indexes_array(line, is_letter)
       swap_near(line,chars)
     when 5 # insert letter
-      char = get_chars_array(line, is_letter).sample
+      char = chars_n_indexes_array(line, is_letter).sample
       line[char[0]] = char[1] + self.class::LETTERS.chars.sample
     end
     line
@@ -77,7 +75,7 @@ class Generator
     line
   end
 
-  def get_chars_array(line, is)
+  def chars_n_indexes_array(line, is)
     line.chars.map.with_index{ |x,i| [i,x] if is.call(x) }.compact
   end
 
@@ -101,10 +99,6 @@ class Generator
 
   def city_name(state_name)
     rand_from_table_by_zone(table_name("cities"), state_name)[:label]
-  end
-
-  def get_full_country
-    @country_full_name
   end
 
   def street_n_build_no

@@ -4,8 +4,9 @@ class Initializer
   public 
 
   def initialize
+    puts DATABASE_FILE_PATH
     @db = SQLite3::Database.open "#{ DATABASE_FILE_PATH }"
-    Dir.foreach(FILES_PATH) { |file|
+    Dir.foreach(DATA_FILES_PATH) { |file|
       next if file == '.' || file == '..' || file.nil?
       tables = @db.execute("SELECT * FROM sqlite_master" \
       " WHERE name = '#{ file }' and type = 'table'")
@@ -19,9 +20,9 @@ class Initializer
 
   private
 
-  PROJECT_ROOT_PATH = "/home/egorrode/development/user_gen/"
+  PROJECT_ROOT_PATH = ""
   DATABASE_FILE_PATH = PROJECT_ROOT_PATH + "databases/user_generator.db"
-  FILES_PATH = PROJECT_ROOT_PATH + "data/"
+  DATA_FILES_PATH = PROJECT_ROOT_PATH + "data/"
 
   def create_new_table(table_name)
     @db.execute "DROP TABLE IF EXISTS #{ table_name }"
@@ -34,7 +35,7 @@ class Initializer
       cities_file_to_db(filename)
     else
       create_new_table(filename)
-      file = File.new(FILES_PATH + filename, "r")
+      file = File.new(DATA_FILES_PATH + filename, "r")
       insert_file_lines(filename, file, "Label")
     end
   end
@@ -57,7 +58,7 @@ class Initializer
 
   def cities_file_to_db(filename)
     create_new_cities_table(filename)
-    file = File.new(FILES_PATH + filename, "r")
+    file = File.new(DATA_FILES_PATH + filename, "r")
     insert_cities_file_lines(filename, file)
   end
 

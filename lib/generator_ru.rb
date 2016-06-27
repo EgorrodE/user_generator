@@ -1,13 +1,11 @@
 require_relative 'generator'
 
-class GeneratorRuBy < Generator
+class GeneratorRu < Generator
 
   protected
 
   LETTERS = "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬББЮ"
   DIGITS = "0123456789"
-  IS_DIGIT = proc { |a| self.class::DIGITS.include? a}
-  IS_LETTER = proc { |a| self.class::LETTERS.include? a}
 
   def zip(state_id)
     substitute_x(find_by_id(table_name("zip_codes"), state_id)[1])

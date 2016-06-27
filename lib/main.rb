@@ -15,25 +15,25 @@ class Main
       @generator = GeneratorRuBy.new(
         db, @country, @error_chance, "Беларусь")
     else
-      puts "invalid_args"
+      puts @opts
     end
   end
 
   def start
-    generate_n_print_users
+    generate_n_print_users if @generator
   end
 
   private
 
   def init_args(args)
-    opts = Slop.parse args do |o|
+    @opts = Slop.parse args do |o|
       o.string '-c', '--country', suppress_error: true
       o.integer '-n', '--number', default: 1
       o.float '-e', '--error', default: 0
     end
-    @country = opts[:country]
-    @count = opts[:number]
-    @error_chance = opts[:error]
+    @country = @opts[:country]
+    @count = @opts[:number]
+    @error_chance = @opts[:error]
   end
 
   def generate_n_print_users

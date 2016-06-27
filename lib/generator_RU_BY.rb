@@ -2,6 +2,8 @@ require_relative 'generator'
 
 class GeneratorRuBy < Generator
 
+  protected
+
   LETTERS = "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬББЮ"
   DIGITS = "0123456789"
   IS_DIGIT = proc { |a| self.class::DIGITS.include? a}

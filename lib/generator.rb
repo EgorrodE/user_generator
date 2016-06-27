@@ -9,15 +9,17 @@ class Generator
     @country_full_name = country_full_name
   end
 
-  LETTERS = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
-  DIGITS = "0123456789"
-
   def user
     user = name
     user += address
     add_error(user) if rand <= @error_chance && user != ""
     user
   end
+
+  protected
+
+  LETTERS = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
+  DIGITS = "0123456789"
 
   def is_digit
     proc { |a| self.class::DIGITS.include? a}

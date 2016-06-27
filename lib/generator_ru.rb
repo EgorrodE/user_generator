@@ -8,11 +8,11 @@ class GeneratorRu < Generator
   DIGITS = "0123456789"
 
   def zip(state_id)
-    substitute_x(find_by_id(table_name("zip_codes"), state_id)[1])
+    substitute_x(find_by_id(table_name("zip_codes"), state_id)[:label])
   end
 
   def street_n_build_no
-    "#{ get_by_type("streets")[1] }, #{ (1 + rand(100)).to_s }, "
+    "#{ get_by_type("streets")[:label] }, #{ (1 + rand(100)).to_s }, "
   end
 
   def table_name(table_type)

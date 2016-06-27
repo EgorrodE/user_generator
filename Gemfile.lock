@@ -1,12 +1,14 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    sequel (4.35.0)
     slop (4.3.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  sequel
   slop
 
 BUNDLED WITH

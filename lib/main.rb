@@ -9,13 +9,13 @@ class Main
     when "US"
       @generator = GeneratorUS.new(db, @country, @error_chance, "USA")
     when "RU"
-      @generator = GeneratorRu.new(
-        db, @country, @error_chance,"Россия")
+      @generator = GeneratorRu.new(db, @country, @error_chance,"Россия")
     when "BY"
-      @generator = GeneratorBy.new(
-        db, @country, @error_chance, "Беларусь")
-    else
+      @generator = GeneratorBy.new(db, @country, @error_chance, "Беларусь")
+    when ""
       puts @opts
+    else
+      puts "invalid args"
     end
   end
 
@@ -27,7 +27,7 @@ class Main
 
   def init_args(args)
     @opts = Slop.parse args do |o|
-      o.string '-c', '--country', suppress_error: true
+      o.string '-c', '--country', default: ""
       o.integer '-n', '--number', default: 1
       o.float '-e', '--error', default: 0
     end

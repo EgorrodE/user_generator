@@ -1,4 +1,4 @@
-require 'sqlite3'
+require 'sequel'
 
 class Generator
 
@@ -83,26 +83,24 @@ class Generator
 
   def state_city_zip_phone
     state = rand_from_table(table_name("states"))
-    state_id = state[0]
-    state_name = state[1]
+    state_id = state[:id]
+    state_name = state[:label]
     "#{ city_name(state_name) }, #{ state_name }, " +
       "#{ zip(state_id) }, #{ get_full_country }; " +
       "#{ phone(state_id) }"
   end
 
   def zip(state_id)
-    find_by_id(
-      table_name("zip_codes"),
-      state_id)[1] + ", " + (1 + rand(99999)
-    ).to_s
+    find_by_id(table_name("zip_codes"), state_id)[:label] + ", " + 
+      (1 + rand(99999)).to_s
   end
 
   def phone(state_id)
-    substitute_x(find_by_id(table_name("phones"),state_id)[1])
+    substitute_x(find_by_id(table_name("phones"),state_id)[:label])
   end
 
   def city_name(state_name)
-    rand_from_table_by_zone(table_name("cities"), state_name)[1]
+    rand_from_table_by_zone(table_name("cities"), state_name)[:label]
   end
 
   def get_full_country
@@ -125,8 +123,8 @@ class Generator
   def get_by_types_array(table_types, middle_separator, last_separator)
     result = ""
     table_types.each_index{ |i|
-      tmp = get_by_type(table_types[i])[1]
-      if tmp != ""
+      tmp = get_by_type(table_types[i])[:label]
+      unless tmp == "" && tmp == nil
         result += tmp
         result += middle_separator if i != table_types.size - 1
       end
@@ -147,8 +145,8 @@ class Generator
   end
 
   def rand_from_table_by_zone(table_name, zone)
-    @db.execute("SELECT * FROM #{ table_name } " +
-              "WHERE Zone = \"#{ zone }\"").sample
+    cities = @db[:"#{table_name}"].where(:zone => zone).to_a
+    cities.sample
   end
 
   def rand_from_table(table_name)
@@ -157,10 +155,10 @@ class Generator
   end
 
   def find_by_id(table_name, id)
-    @db.execute("SELECT * FROM #{ table_name } WHERE Id = #{ id }")[0]
+    @db[:"#{table_name}"][:id => id]
   end
 
   def table_size(table_name)
-    @db.execute("SELECT COUNT(*) FROM #{ table_name }")[0][0]
+    @db[:"#{table_name}"].count
   end
 end

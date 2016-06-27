@@ -1,7 +1,7 @@
 require 'sequel'
 
 class Generator
-  attr_reader :country_full_name
+  attr_reader :country_full_name, :current_user
 
   def initialize(db, country, error_chance, country_full_name)
     @db = db
@@ -11,10 +11,9 @@ class Generator
   end
 
   def user
-    user = name
-    user += address
-    add_error(user) if rand <= @error_chance && user != ""
-    user
+    @current_user = name
+    @current_user += address
+    add_error(@current_user) if rand <= @error_chance && @current_user != ""
   end
 
   protected
@@ -38,7 +37,8 @@ class Generator
     address += state_city_zip_phone
   end
 
-  def add_error(line)
+  def add_error(user)
+    line = user.clone
     k = rand(6)
     case k
     when 0 # swap near digits
@@ -84,7 +84,7 @@ class Generator
     state_id = state[:id]
     state_name = state[:label]
     "#{ city_name(state_name) }, #{ state_name }, " +
-      "#{ zip(state_id) }, #{ get_full_country }; " +
+      "#{ zip(state_id) }, #{ country_full_name }; " +
       "#{ phone(state_id) }"
   end
 
@@ -107,7 +107,7 @@ class Generator
   end
 
   def secondary_address
-    "#{ get_by_type("secondary_prefix")[1] } #{ (1 + rand(100)).to_s }, "
+    "#{ get_by_type("secondary_prefix")[:label] } #{ (1 + rand(100)).to_s }, "
   end
 
   def has_secondary_address?

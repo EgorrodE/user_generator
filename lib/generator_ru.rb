@@ -4,6 +4,13 @@ class GeneratorRu < Generator
   LETTERS = "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬББЮ"
   DIGITS = "0123456789"
 
+  def initialize(db, error_chance)
+    @db = db
+    @country = "RU"
+    @error_chance = error_chance
+    @country_full_name = "Россия"
+  end
+
   protected
   
   def zip(state_id)

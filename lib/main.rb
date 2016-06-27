@@ -6,11 +6,11 @@ class Main
     db = Initializer.new.db
     case @country
     when "US"
-      @generator = GeneratorUS.new(db, @country, @error_chance, "USA")
+      @generator = GeneratorUS.new(db, @error_chance)
     when "RU"
-      @generator = GeneratorRu.new(db, @country, @error_chance,"Россия")
+      @generator = GeneratorRu.new(db, @error_chance)
     when "BY"
-      @generator = GeneratorBy.new(db, @country, @error_chance, "Беларусь")
+      @generator = GeneratorBy.new(db, @error_chance)
     when ""
       puts @opts
     else

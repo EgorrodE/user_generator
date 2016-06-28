@@ -1,5 +1,5 @@
 require_relative "../../lib/generator_ru"
-require_relative "../../lib/initializer"
+require_relative "../../lib/database"
 require "test/unit"
 
 class TestGeneratorRu < Test::Unit::TestCase
@@ -7,7 +7,7 @@ class TestGeneratorRu < Test::Unit::TestCase
   GENERATOR = GeneratorRu
 
   def test_with_error
-    @db ||= Initializer.new.db
+    @db ||= Database.new.db
     @generator = GENERATOR.new(@db, 1)
     @new_user = @generator.new_user
     assert_match(USER_REGEXP, @new_user) 

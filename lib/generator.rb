@@ -3,11 +3,9 @@ require 'sequel'
 class Generator
   attr_reader :country_full_name, :current_user
 
-  def initialize(db, country, error_chance, country_full_name)
+  def initialize(db, error_chance)
     @db = db
-    @country = country
     @error_chance = error_chance
-    @country_full_name = country_full_name
   end
 
   def new_user
@@ -119,15 +117,14 @@ class Generator
   end
 
   def get_by_types_array(table_types, middle_separator, last_separator)
-    result = ""
-    table_types.each_index{ |i|
-      tmp = get_by_type(table_types[i])[:label]
+    result = []
+    table_types.each{ |t|
+      tmp = get_by_type(t)[:label]
       unless tmp == "" && tmp == nil
-        result += tmp
-        result += middle_separator if i != table_types.size - 1
+        result << tmp
       end
     }
-    result += last_separator
+    result.join(middle_separator) + last_separator
   end
 
   def get_by_type(table_type)
@@ -143,7 +140,7 @@ class Generator
   end
 
   def rand_from_table_by_zone(table_name, zone)
-    cities = @db[:"#{table_name}"].where(:zone => zone).to_a
+    cities = @db[:"#{ table_name }"].where(:zone => zone).to_a
     cities.sample
   end
 
@@ -153,10 +150,10 @@ class Generator
   end
 
   def find_by_id(table_name, id)
-    @db[:"#{table_name}"][:id => id]
+    @db[:"#{ table_name }"][:id => id]
   end
 
   def table_size(table_name)
-    @db[:"#{table_name}"].count
+    @db[:"#{ table_name }"].count
   end
 end

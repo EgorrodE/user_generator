@@ -5,9 +5,8 @@ class GeneratorUS < Generator
   DIGITS = "0123456789"
 
   def initialize(db, error_chance)
-    @db = db
+    super(db, error_chance)
     @country = "US"
-    @error_chance = error_chance
     @country_full_name = "USA"
   end
 end

@@ -1,21 +1,21 @@
 require 'slop'
 
 class Main
+  VALID_COUTRIES = "BY RU US"
+
   def initialize
     init_args(ARGV)
-    db = Initializer.new.db
+    db = Database.new.db
+    gen_class = nil
     case @country
     when "US"
-      @generator = GeneratorUS.new(db, @error_chance)
+      gen_class = GeneratorUS
     when "RU"
-      @generator = GeneratorRu.new(db, @error_chance)
+      gen_class = GeneratorRu
     when "BY"
-      @generator = GeneratorBy.new(db, @error_chance)
-    when ""
-      puts @opts
-    else
-      puts "invalid args"
+      gen_class = GeneratorBy
     end
+    @generator = gen_class.new(db, @error_chance) unless gen_class.nil?
   end
 
   def start
@@ -25,24 +25,24 @@ class Main
   private
 
   def init_args(args)
-    @opts = Slop.parse args do |o|
+    opts = Slop.parse args do |o|
       o.string '-c', '--country', default: ""
       o.integer '-n', '--number', default: 1
       o.float '-e', '--error', default: 0
     end
-    @country = @opts[:country]
-    @count = @opts[:number]
-    @error_chance = @opts[:error]
+    @country = opts[:country]
+    @count = opts[:number]
+    @error_chance = opts[:error]
+    if(@country == "")
+      puts opts
+    elsif !VALID_COUTRIES.include? @country
+      puts "invalid arguments"
+    end
   end
 
   def generate_n_print_users
-    i = 0
-    while i < @count
-      user = @generator.new_user
-      if user
-        puts user
-        i += 1
-      end
+    @count.times do
+      puts @generator.new_user
     end
   end
 end

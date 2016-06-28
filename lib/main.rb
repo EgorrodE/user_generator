@@ -38,7 +38,7 @@ class Main
   def generate_n_print_users
     i = 0
     while i < @count
-      user = @generator.user
+      user = @generator.new_user
       if user
         puts user
         i += 1

@@ -10,11 +10,11 @@ class Generator
     @country_full_name = country_full_name
   end
 
-  def user
+  def new_user
     @current_user = name
     @current_user += address
     if rand <= @error_chance && @current_user != ""
-      add_error(@current_user) 
+      return add_error(@current_user) 
     else
       @current_user
     end

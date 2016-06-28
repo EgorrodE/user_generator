@@ -8,19 +8,21 @@ class TestGeneratorBy < Test::Unit::TestCase
 
   def test_with_error
     @db ||= Initializer.new.db
-    @generator ||= GENERATOR.new(@db, 1)
-    @user_with_error = @generator.user
-    assert_match(USER_REGEXP, @user_with_error) 
-    assert(has_error?)
+    @generator = GENERATOR.new(@db, 1)
+    @new_user = @generator.new_user
+    assert_match(USER_REGEXP, @new_user) 
+    assert(error?)
   end
 
   def test_without_error
     @db ||= Initializer.new.db
-    @generator ||= GENERATOR.new(@db, 1)
-    assert_match(USER_REGEXP, @generator.user)
+    @generator = GENERATOR.new(@db, 0)
+    @new_user = @generator.new_user
+    assert_match(USER_REGEXP, @new_user)
+    assert(!error?)
   end
 
-  def has_error?
-    @user_with_error != @generator.current_user
+  def error?
+    @new_user != @generator.current_user
   end
 end

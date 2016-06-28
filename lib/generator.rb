@@ -1,7 +1,7 @@
 require 'sequel'
 
 class Generator
-  attr_reader :country_full_name, :current_user
+  attr_reader :country_full_name, :current_user, :last_error_code
 
   def initialize(db, error_chance)
     @db = db
@@ -11,6 +11,7 @@ class Generator
   def new_user
     @current_user = name
     @current_user += address
+    @last_error_code = -1
     if rand <= @error_chance && @current_user != ""
       return add_error(@current_user) 
     else
@@ -41,14 +42,14 @@ class Generator
 
   def add_error(user)
     line = user.clone
-    k = rand(6)
-    case k
+    @last_error_code = rand(6)
+    case @last_error_code
     when 0 # swap near digits
       chars = chars_n_indexes_array(line, is_digit)
       swap_near(line,chars)
     when 1 # replase digit with another
       char = chars_n_indexes_array(line, is_digit).sample
-      line[char[0]] = rand(10).to_s
+      line[char[0]] = self.class::DIGITS.tr(line[char[0]],"").chars.sample
     when 2 # remove letter
       char = chars_n_indexes_array(line, is_letter).sample
       line[char[0]] = ""
@@ -68,7 +69,8 @@ class Generator
   def swap_near(line,chars)
     loop do
       i = rand(chars.size)
-      if i != chars.size - 1 && chars[i][0] == chars[i + 1][0] - 1
+      if i != chars.size - 1 && chars[i][0] == chars[i + 1][0] - 1 && 
+        chars[i][1] != chars[i + 1][1]
         line[chars[i][0]],line[chars[i + 1][0]] =
           line[chars[i + 1][0]],line[chars[i][0]]
         break
@@ -150,7 +152,14 @@ class Generator
   end
 
   def find_by_id(table_name, id)
-    @db[:"#{ table_name }"][:id => id]
+    unless result = @db[:"#{ table_name }"][:id => id]
+      size = table_size(table_name)
+      loop do 
+        id = (id < size - 1 ? id + 1 : 0) 
+        break unless result = @db[:"#{ table_name }"][:id => id]
+      end 
+    end
+    result
   end
 
   def table_size(table_name)

@@ -13,7 +13,11 @@ class Generator
   def user
     @current_user = name
     @current_user += address
-    add_error(@current_user) if rand <= @error_chance && @current_user != ""
+    if rand <= @error_chance && @current_user != ""
+      add_error(@current_user) 
+    else
+      @current_user
+    end
   end
 
   protected
